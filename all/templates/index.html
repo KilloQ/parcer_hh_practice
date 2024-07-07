@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <title>Вакансии HH</title>
+</head>
+<body>
+    <h1>Поиск вакансий</h1>
+    <form method="POST">
+        <label for="keyword">Введите ключевое слово:</label>
+        <input type="text" id="keyword" name="keyword">
+        <br><br>
+        <label for="city">Город (не обязательно):</label>
+        <input type="text" id="city" name="city">
+        <br><br>
+        <button type="submit">Найти</button>
+    </form>
+    <h2>Результаты:</h2>
+    <table border="1" align="center">
+        <thead align="justify">
+            <tr>
+                <th>ID</th>
+                <th>Название</th>
+                <th>URL</th>
+                <th>Компания</th>
+                <th>Город</th>
+                <th>Заработная плата</th>
+                <th>Валюта</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for vacancy in vacancies %}
+            <tr>
+                <td>{{ vacancy[0] }}</td>
+                <td>{{ vacancy[1] }}</td>
+                <td><a href="{{ vacancy[2] }}">{{ vacancy[2] }}</a></td>
+                <td>{{ vacancy[3] }}</td>
+                <td>{{ vacancy[4] }}</td>
+                <td>{{ vacancy[5] }}</td>
+                <td>{{ vacancy[6] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
