@@ -5,8 +5,9 @@ from flask import Flask, render_template, request
 app = Flask(__name__)
 app.template_folder = 'templates'
 
+
 def vacancies_search(keyword):
-    connection = sqlite3.connect("hh_bd.db")
+    connection = sqlite3.connect("../hh_bd.db")
     cursor = connection.cursor()
     cursor.execute("DELETE FROM vacancies")
     connection.commit()
@@ -37,7 +38,7 @@ def vacancies_search(keyword):
                 vacancy_salary_to = str(vacancy.get("salary", {}).get("to"))
                 valute = str(vacancy.get("salary", {}).get("currency"))
 
-                connection = sqlite3.connect("hh_bd.db")
+                connection = sqlite3.connect("../hh_bd.db")
                 cursor = connection.cursor()
                 cursor.execute("INSERT INTO vacancies VALUES (?,?,?,?,?,?,?)", (vacancy_id,
                                                                                 vacancy_title,
@@ -51,18 +52,27 @@ def vacancies_search(keyword):
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    if request.method == 'POST':
-        keyword = request.form['keyword']
-        vacancies_search(keyword)
-        connection = sqlite3.connect("hh_bd.db")
-        cursor = connection.cursor()
-        cursor.execute("SELECT * FROM vacancies")
-        vacancies = cursor.fetchall()
-        connection.close()
+    keyword = request.form.get('keyword', '')
+    city = request.form.get('city', '')
 
-        return render_template('index.html', vacancies=vacancies)
+    if request.method == 'POST':
+        if keyword:
+            vacancies_search(keyword)
+
+            connection = sqlite3.connect("../hh_bd.db")
+            cursor = connection.cursor()
+            if city:
+                cursor.execute("SELECT * FROM vacancies WHERE area LIKE ?", ('%' + city + '%',))
+            else:
+                cursor.execute("SELECT * FROM vacancies")
+            vacancies = cursor.fetchall()
+            connection.close()
+
+            return render_template('index.html', vacancies=vacancies, keyword=keyword, city=city)
+        else:
+            return render_template('index.html', error="Please enter a keyword")
     else:
-        return render_template('index.html')
+        return render_template('index.html', keyword=keyword, city=city)
 
 
 if __name__ == '__main__':
