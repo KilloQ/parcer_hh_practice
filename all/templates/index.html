@@ -88,18 +88,20 @@
                     <form method="POST">
                         <div class="form-group">
                             <label>
-                                <input type="text" class="search-input" name="keyword" placeholder="Введите название вакансии/Ключевые слова" required>
+                                <input type="text" class="search-input" name="keyword" placeholder="Введите дожность или ключевое слово" required>
                             </label>
                         </div>
                         <div class="form-group">
                             <label>
-                                <input type="text" class="search-input" name="city" placeholder="Введите город (необязательно)" >
-                            </label>
-                            <label>
-                                <input type="number" class="search-input" name="salary_from" placeholder="Зарплата от (необязательно)" min="0">
+                                <input type="text" class="search-input" name="city" placeholder="Введите город" >
                             </label>
                         </div>
-                        <button type="submit" class="search-button btn btn-primary btn-block"><i class="fas fa-search"></i> Поиск вакансий</button>
+                        <div class="form-group">
+                            <label>
+                                <input type="number" class="search-input" name="salary_from" placeholder="Зарплата от" min="0">
+                            </label>
+                        </div>
+                        <button type="submit" class="search-button btn btn-primary btn-block"><i class="fas fa-search"></i> Искать вакансии</button>
                     </form>
                 </div>
 
@@ -110,23 +112,24 @@
                 {% endif %}
 
                 <div class="vacancy-list mt-4">
-                    {% if vacancies %}
-                        {% for vacancy in vacancies %}
-                            <div class="vacancy-item">
-                                <h2 class="vacancy-title"><a href="{{ vacancy[2] }}">{{ vacancy[1] }}</a></h2>
-                                <div class="vacancy-info">
-                                    <span>Компания: {{ vacancy[3] }}</span>
-                                    <span>Город: {{ vacancy[4] }}</span>
-                                    <span>Зарплата: {{ vacancy[5] }} - {{ vacancy[6] }} {{ vacancy[7]}}</span>
+                    <div id="vacancy-container">
+                        {% if vacancies %}
+                            {% for vacancy in vacancies %}
+                                <div class="vacancy-item" data-salary-from="{{ vacancy[5] }}" data-salary-to="{{ vacancy[6] }}" data-area="{{ vacancy[4] }}">
+                                    <h2 class="vacancy-title">{{ vacancy[1] }}</h2>
+                                    <div class="vacancy-info">
+                                        <span>Компания: {{ vacancy[3] }}</span>
+                                        <span>Город: {{ vacancy[4] }}</span>
+                                        <span>Зарплата: {{ vacancy[5] }} - {{ vacancy[6] }} {{ vacancy[7]}}</span>
+                                    </div>
                                 </div>
-                            </div>
-                        {% endfor %}
-                    {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
 
 </body>
 </html>

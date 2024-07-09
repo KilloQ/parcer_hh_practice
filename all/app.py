@@ -51,24 +51,32 @@ def vacancies_search(keyword):
             vacancies = data.get("items", [])
             for vacancy in vacancies:
                 vacancy_id = str(vacancy.get("id"))
-                vacancy_title = str(vacancy.get("name"))
-                vacancy_url = str(vacancy.get("alternate_url"))
-                company_name = str(vacancy.get("employer", {}).get("name"))
-                vacancy_area = str(vacancy.get("area", {}).get("name"))
-                vacancy_salary_from = vacancy.get("salary", {}).get("from")
-                vacancy_salary_to = vacancy.get("salary", {}).get("to")
-                valute = str(vacancy.get("salary", {}).get("currency"))
 
                 connection = sqlite3.connect(db_path)
                 cursor = connection.cursor()
-                cursor.execute("INSERT INTO vacancies VALUES (?,?,?,?,?,?,?,?)", (vacancy_id,
-                                                                                  vacancy_title,
-                                                                                  vacancy_url, company_name,
-                                                                                  vacancy_area, vacancy_salary_from,
-                                                                                  vacancy_salary_to,
-                                                                                  valute))
-                connection.commit()
+                cursor.execute("SELECT 1 FROM vacancies WHERE id = ?", (vacancy_id,))
+                exists = cursor.fetchone()
                 connection.close()
+
+                if not exists:
+                    vacancy_title = str(vacancy.get("name"))
+                    vacancy_url = str(vacancy.get("alternate_url"))
+                    company_name = str(vacancy.get("employer", {}).get("name"))
+                    vacancy_area = str(vacancy.get("area", {}).get("name"))
+                    vacancy_salary_from = vacancy.get("salary", {}).get("from")
+                    vacancy_salary_to = vacancy.get("salary", {}).get("to")
+                    valute = str(vacancy.get("salary", {}).get("currency"))
+
+                    connection = sqlite3.connect(db_path)
+                    cursor = connection.cursor()
+                    cursor.execute("INSERT INTO vacancies VALUES (?,?,?,?,?,?,?,?)", (vacancy_id,
+                                                                                      vacancy_title,
+                                                                                      vacancy_url, company_name,
+                                                                                      vacancy_area, vacancy_salary_from,
+                                                                                      vacancy_salary_to,
+                                                                                      valute))
+                    connection.commit()
+                    connection.close()
 
 
 create_database()
