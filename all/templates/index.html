@@ -1,46 +1,132 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Вакансии HH</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8f9fa;
+
+        }
+
+        .container {
+            margin-top: 50px;
+            text-align: center
+        }
+
+        .search-form {
+            margin: auto;
+            background-color: #fff;
+            width: 60%;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-input {
+            width: 40%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            box-sizing: border-box;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+        }
+
+        .search-button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .search-button:hover {
+            background-color: #0069d9;
+        }
+
+        .vacancy-list {
+            margin-top: 30px;
+        }
+
+        .vacancy-item {
+            width: 60%;
+            margin: auto;
+            background-color: #fff;
+            padding: 20px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .vacancy-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .vacancy-info {
+            margin-top: 10px;
+        }
+
+        .vacancy-info span {
+            font-size: 0.9rem;
+            color: #6c757d;
+            display: block;
+            margin-bottom: 5px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Поиск вакансий</h1>
-    <form method="POST">
-        <label for="keyword">Введите ключевое слово:</label>
-        <input type="text" id="keyword" name="keyword" placeholder="Введите ключевое слово">
-        <br><br>
-        <label for="city">Город (не обязательно):</label>
-        <input type="text" id="city" name="city" placeholder="Введите город">
-        <br><br>
-        <button type="submit">Найти</button>
-    </form>
-    <h2>Результаты:</h2>
-    <table border="1" align="center">
-        <thead align="justify">
-            <tr>
-                <th>ID</th>
-                <th>Название</th>
-                <th>URL</th>
-                <th>Компания</th>
-                <th>Город</th>
-                <th>Заработная плата</th>
-                <th>Валюта</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for vacancy in vacancies %}
-            <tr>
-                <td>{{ vacancy[0] }}</td>
-                <td>{{ vacancy[1] }}</td>
-                <td><a href="{{ vacancy[2] }}">{{ vacancy[2] }}</a></td>
-                <td>{{ vacancy[3] }}</td>
-                <td>{{ vacancy[4] }}</td>
-                <td>{{ vacancy[5] }}</td>
-                <td>{{ vacancy[6] }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <h1 class="text-center mb-4">Поиск вакансий</h1>
+                <div class="search-form">
+                    <form method="POST">
+                        <div class="form-group">
+                            <label>
+                                <input type="text" class="search-input" name="keyword" placeholder="Введите название вакансии/Ключевые слова" required>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="text" class="search-input" name="city" placeholder="Введите город (необязательно)" >
+                            </label>
+                            <label>
+                                <input type="number" class="search-input" name="salary_from" placeholder="Зарплата от (необязательно)" min="0">
+                            </label>
+                        </div>
+                        <button type="submit" class="search-button btn btn-primary btn-block"><i class="fas fa-search"></i> Поиск вакансий</button>
+                    </form>
+                </div>
+
+                {% if error %}
+                    <div class="alert alert-danger mt-3" role="alert">
+                        {{ error }}
+                    </div>
+                {% endif %}
+
+                <div class="vacancy-list mt-4">
+                    {% if vacancies %}
+                        {% for vacancy in vacancies %}
+                            <div class="vacancy-item">
+                                <h2 class="vacancy-title"><a href="{{ vacancy[2] }}">{{ vacancy[1] }}</a></h2>
+                                <div class="vacancy-info">
+                                    <span>Компания: {{ vacancy[3] }}</span>
+                                    <span>Город: {{ vacancy[4] }}</span>
+                                    <span>Зарплата: {{ vacancy[5] }} - {{ vacancy[6] }} {{ vacancy[7]}}</span>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 </body>
 </html>
